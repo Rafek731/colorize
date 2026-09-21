@@ -1,4 +1,4 @@
-from colorize import Color, color, strip
+from colorize import RED, color, strip
 from colorize.shortcuts import blue, red
 
 
@@ -14,7 +14,7 @@ def test_hex_color(monkeypatch):
 
 def test_color_instance(monkeypatch):
     monkeypatch.setenv("FORCE_COLOR", "1")
-    assert color("hi", Color.RED) == red("hi")
+    assert color("hi", RED) == red("hi")
 
 
 def test_rgb_tuple(monkeypatch):

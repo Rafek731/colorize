@@ -6,7 +6,7 @@ import os
 import re
 import sys
 
-from .colors import Color
+from .color import Color
 
 _RESET = "\x1b[0m"
 _ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")

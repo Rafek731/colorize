@@ -1,23 +1,23 @@
-"""Per-color convenience functions, e.g. `red("text")`, generated from `Color`."""
+"""Per-color convenience functions, e.g. `red("text")`, generated from `PALETTE`."""
 
 from __future__ import annotations
 
 from .ansi import color
-from .colors import Color
+from .color import Color, PALETTE
 
-__all__ = [member.name.lower() for member in Color]
+__all__ = list(PALETTE)
 
 
-def _make(member: Color):
+def _make(name: str, member: Color):
     def fn(text: str, **kwargs) -> str:
         return color(text, fg=member, **kwargs)
 
-    fn.__name__ = fn.__qualname__ = member.name.lower()
-    fn.__doc__ = f"Color `text` {member.name.lower().replace('_', ' ')} ({member.to_hex()})."
+    fn.__name__ = fn.__qualname__ = name
+    fn.__doc__ = f"Color `text` {name.replace('_', ' ')} ({member.to_hex()})."
     return fn
 
 
-for _member in Color:
-    globals()[_member.name.lower()] = _make(_member)
+for _name, _rgb in PALETTE.items():
+    globals()[_name] = _make(_name, Color.rgb(*_rgb))
 
-del _member
+del _name, _rgb

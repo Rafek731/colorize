@@ -1,21 +1,12 @@
 import pytest
 
-from colorize import Color
+from colorize.color import Color
 
 
-def test_named_member():
-    assert Color.RED.r == 205
-    assert Color.RED.to_hex() == "#cd0000"
-
-
-def test_rgb_matches_named_member():
-    assert Color.rgb(205, 0, 0) is Color.RED
-
-
-def test_rgb_custom():
-    custom = Color.rgb(1, 2, 3)
-    assert (custom.r, custom.g, custom.b) == (1, 2, 3)
-    assert custom not in list(Color)
+def test_rgb():
+    color = Color.rgb(205, 0, 0)
+    assert (color.r, color.g, color.b) == (205, 0, 0)
+    assert color.to_hex() == "#cd0000"
 
 
 def test_rgb_out_of_range():
@@ -29,8 +20,8 @@ def test_from_hex():
 
 
 def test_from_name_case_insensitive():
-    assert Color.from_name("bright_red") is Color.BRIGHT_RED
-    assert Color.from_name("BRIGHT_RED") is Color.BRIGHT_RED
+    assert Color.from_name("bright_red") == Color.rgb(255, 0, 0)
+    assert Color.from_name("BRIGHT_RED") == Color.from_name("bright_red")
 
 
 def test_from_name_unknown():
@@ -39,9 +30,16 @@ def test_from_name_unknown():
 
 
 def test_parse():
-    assert Color.parse(Color.RED) is Color.RED
-    assert Color.parse("red") is Color.RED
+    red = Color.from_name("red")
+    assert Color.parse(red) == red
+    assert Color.parse(red) is not red  # classmethods always construct a new Color
+    assert Color.parse("red") == red
     assert Color.parse("#ff8800") == Color.rgb(255, 136, 0)
     assert Color.parse((1, 2, 3)) == Color.rgb(1, 2, 3)
     with pytest.raises(TypeError):
         Color.parse(object())
+
+
+def test_equality_and_hash():
+    assert Color.rgb(1, 2, 3) == Color.rgb(1, 2, 3)
+    assert hash(Color.rgb(1, 2, 3)) == hash(Color.rgb(1, 2, 3))

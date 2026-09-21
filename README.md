@@ -8,31 +8,34 @@ import colorize as c
 print(c.red("error"))
 print(c.green("ok"))
 print(c.color("custom", "#ff8800"))
-print(c.color("warn", fg=c.Color.BLACK, bg="#ffcc00", bold=True))
+print(c.color("warn", fg=c.BLACK, bg="#ffcc00", bold=True))
 print(c.render("plain text \\red{and this part is red}"))
 ```
 
 ## Layout
 
-- `colorize.colors` — the `Color` enum (built-in named colors + `Color.rgb()`/`Color.from_hex()`)
+- `colorize.colors` — the `Color` class (`Color.rgb()`/`Color.from_hex()`/`Color.from_name()`) and the built-in `PALETTE`
 - `colorize.ansi` — the `color()` function and `strip()`
-- `colorize.shortcuts` — per-color functions (`red`, `bright_blue`, ...) generated from `Color`
+- `colorize.shortcuts` — per-color functions (`red`, `bright_blue`, ...) generated from `PALETTE`
 - `colorize.markup` — inline `\tag{...}` text markup via `render()`
 
 ## `Color`
 
-`Color` is an enum of the 16 standard named colors (`BLACK` ... `BRIGHT_WHITE`),
-but also accepts arbitrary RGB values:
+`Color` is a plain class holding `r`/`g`/`b` components. Its classmethods
+each construct a new `Color`:
 
 ```python
 from colorize import Color
 
-Color.RED                      # a built-in member
-Color.rgb(255, 136, 0)         # arbitrary RGB — returns a built-in member if it matches one
+Color.rgb(255, 136, 0)         # from raw components
 Color.from_hex("#ff8800")      # same, from a hex string
-Color.from_name("bright_red")  # by name, case-insensitive
+Color.from_name("bright_red")  # by built-in name, case-insensitive
 Color.parse(value)             # coerce a Color, hex string, name, or (r, g, b) tuple
 ```
+
+The package also exposes each built-in color as its own `Color` object —
+`colorize.RED`, `colorize.BRIGHT_BLUE`, etc. — alongside the lowercase
+`colorize.red("text")`-style shortcut functions.
 
 ## `color()`
 
